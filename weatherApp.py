@@ -1,7 +1,7 @@
 import os
 import sys
 from dotenv import load_dotenv
-from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget
+from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QGridLayout
 from PyQt5.QtGui import QIcon
 
 class WeatherApp(QMainWindow):
@@ -11,6 +11,11 @@ class WeatherApp(QMainWindow):
         self.setWindowIcon(QIcon("weatherIcon.png"))
         self.setFixedSize(600, 700)
         self.centerWindow()
+
+        central_widget = QWidget()
+        self.setCentralWidget(central_widget)
+        grid = QGridLayout()
+        central_widget.setLayout(grid)
 
     # Move application to center of screen
     def centerWindow(self):
