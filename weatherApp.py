@@ -1,7 +1,7 @@
 import os
 import sys
 from dotenv import load_dotenv
-from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QGridLayout
+from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QGridLayout, QLabel, QLineEdit, QPushButton
 from PyQt5.QtGui import QIcon
 
 class WeatherApp(QMainWindow):
@@ -16,6 +16,17 @@ class WeatherApp(QMainWindow):
         self.setCentralWidget(central_widget)
         grid = QGridLayout()
         central_widget.setLayout(grid)
+
+        # Variables
+        self.instruction = QLabel("Enter city name: ")
+        self.city = QLineEdit()
+        self.get_weather_btn = QPushButton("Get Weather")
+
+
+        # Adding to grid layout
+        grid.addWidget(self.instruction, 0, 0)
+        grid.addWidget(self.city, 1, 0)
+        grid.addWidget(self.get_weather_btn, 2, 0)
 
     # Move application to center of screen
     def centerWindow(self):
