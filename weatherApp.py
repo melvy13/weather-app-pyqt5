@@ -21,12 +21,19 @@ class WeatherApp(QMainWindow):
         self.instruction = QLabel("Enter city name: ")
         self.city = QLineEdit()
         self.get_weather_btn = QPushButton("Get Weather")
+        self.temperature_label = QLabel("Temperature")
+        self.humidity_label = QLabel("Humidity")
+        self.condition_label = QLabel("Condition")
+
 
 
         # Adding to grid layout
         grid.addWidget(self.instruction, 0, 0)
         grid.addWidget(self.city, 1, 0)
         grid.addWidget(self.get_weather_btn, 2, 0)
+        grid.addWidget(self.temperature_label, 3, 0)
+        grid.addWidget(self.humidity_label, 4, 0)
+        grid.addWidget(self.condition_label, 5, 0)
 
     # Move application to center of screen
     def centerWindow(self):
