@@ -1,7 +1,7 @@
 import os
 import sys
 from dotenv import load_dotenv
-from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QGridLayout, QLabel, QLineEdit, QPushButton
+from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout
 from PyQt5.QtGui import QIcon
 
 class WeatherApp(QMainWindow):
@@ -14,8 +14,8 @@ class WeatherApp(QMainWindow):
 
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
-        grid = QGridLayout()
-        central_widget.setLayout(grid)
+        vbox = QVBoxLayout()
+        central_widget.setLayout(vbox)
 
         # Variables
         self.instruction = QLabel("Enter city name: ")
@@ -25,15 +25,13 @@ class WeatherApp(QMainWindow):
         self.humidity_label = QLabel("Humidity")
         self.condition_label = QLabel("Condition")
 
-
-
-        # Adding to grid layout
-        grid.addWidget(self.instruction, 0, 0)
-        grid.addWidget(self.city, 1, 0)
-        grid.addWidget(self.get_weather_btn, 2, 0)
-        grid.addWidget(self.temperature_label, 3, 0)
-        grid.addWidget(self.humidity_label, 4, 0)
-        grid.addWidget(self.condition_label, 5, 0)
+        # Adding to vbox layout
+        vbox.addWidget(self.instruction)
+        vbox.addWidget(self.city)
+        vbox.addWidget(self.get_weather_btn)
+        vbox.addWidget(self.temperature_label)
+        vbox.addWidget(self.humidity_label)
+        vbox.addWidget(self.condition_label)
 
     # Move application to center of screen
     def centerWindow(self):
