@@ -1,5 +1,6 @@
 import os
 import sys
+import requests
 from dotenv import load_dotenv
 from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout
 from PyQt5.QtGui import QIcon
@@ -20,7 +21,7 @@ class WeatherApp(QMainWindow):
 
         # Variables
         self.instruction = QLabel("Enter city name: ")
-        self.city = QLineEdit()
+        self.city_input = QLineEdit()
         self.get_weather_btn = QPushButton("Get Weather")
         self.temperature_label = QLabel("Temperature")
         self.humidity_label = QLabel("Humidity")
@@ -41,7 +42,19 @@ class WeatherApp(QMainWindow):
         frame_geometry = self.frameGeometry()
         frame_geometry.moveCenter(screen_center)
         self.move(frame_geometry.topLeft())
-        
+
+    def get_weather(self):
+        city = self.city_input.text()
+        url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}" # API call by city name
+
+        try:
+            response = requests.get(url)
+            data = response.json
+            print(data)
+
+        except:
+            print("Something happened")
+
 
 if __name__ == "__main__":
     load_dotenv()
