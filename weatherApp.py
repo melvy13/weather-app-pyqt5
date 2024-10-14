@@ -5,7 +5,7 @@ import datetime
 import emoji
 from dotenv import load_dotenv
 from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QRadioButton, QButtonGroup
-from PyQt5.QtGui import QIcon
+from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtCore import Qt
 
 class WeatherApp(QMainWindow):
@@ -215,7 +215,7 @@ class WeatherApp(QMainWindow):
             self.temperature_label.setText("Pick a temperature unit!")
 
         self.humidity_label.setText(f"Humidity:\n{humidity}%")
-        self.emoji_label.setText(self.get_emoji(weather_id))
+        self.emoji_label.setPixmap(self.get_icon(weather_id))
         self.condition_label.setText(f"Weather condition:\n{str(condition).capitalize()}")
 
         # Unix time converted to Year-Month-Date Hour:Minute:Seconds UTC
@@ -229,27 +229,47 @@ class WeatherApp(QMainWindow):
         self.emoji_label.clear()
         self.time_label.clear()
 
-    def get_emoji(self, id):
+    def get_icon(self, id):
+        thunderstorm_pixmap = QPixmap("storm.png")
+        rain_pixmap = QPixmap("rain.png")
+        snow_pixmap = QPixmap("snow.png")
+        fog_pixmap = QPixmap("foggy.png")
+        volcano_pixmap = QPixmap("volcano.png")
+        squalls_pixmap = QPixmap("wind.png")
+        tornado_pixmap = QPixmap("tornado.png")
+        clear_pixmap = QPixmap("sun.png")
+        cloud_pixmap = QPixmap("cloudy.png")
+
+        thunderstorm_pixmap = thunderstorm_pixmap.scaled(100, 100)
+        rain_pixmap = rain_pixmap.scaled(100, 100)
+        snow_pixmap = snow_pixmap.scaled(100, 100)
+        fog_pixmap = fog_pixmap.scaled(100, 100)
+        volcano_pixmap = volcano_pixmap.scaled(100, 100)
+        squalls_pixmap = squalls_pixmap.scaled(100, 100)
+        tornado_pixmap = tornado_pixmap.scaled(100, 100)
+        clear_pixmap = clear_pixmap.scaled(100, 100)
+        cloud_pixmap = cloud_pixmap.scaled(100, 100)
+
         if 200 <= id <= 232: # Thunderstorm
-            return emoji.emojize(":cloud_with_lightning_and_rain:")
+            return thunderstorm_pixmap
         elif 300 <= id <= 531: # Drizzles / Rain
-            return emoji.emojize(":cloud_with_rain:")
+            return rain_pixmap
         elif 600 <= id <= 622: # Snow
-            return emoji.emojize(":cloud_with_snow:")
+            return snow_pixmap
         elif 701 <= id <= 761: # Haze / Smoke / Fog / etc.
-            return emoji.emojize(":fog:")
+            return fog_pixmap
         elif id == 762: # Volcanic ash
-            return emoji.emojize(":volcano:")
+            return volcano_pixmap
         elif id == 771: # Squalls
-            return emoji.emojize(":dashing_away:")
+            return squalls_pixmap
         elif id == 781: # Tornado
-            return emoji.emojize(":tornado:")
+            return tornado_pixmap
         elif id == 800: # Clear
-            return emoji.emojize(":sun:")
+            return clear_pixmap
         elif 801 <= id <= 804: # Cloudy
-            return emoji.emojize(":cloud:")
+            return cloud_pixmap
         else:
-            return ""
+            return QPixmap()
 
 if __name__ == "__main__":
     load_dotenv()
@@ -259,3 +279,15 @@ if __name__ == "__main__":
     weather_app.show()
     sys.exit(app.exec_())
     
+
+# Images reference:
+# <a href="https://www.freepik.com/icon/rain_7922771">Icon by Freepik</a>
+# <a href="https://www.freepik.com/icon/storm_3104593">Icon by Good Ware</a>
+# <a href="https://www.freepik.com/icon/clouds_414825">Icon by Freepik</a>
+# <a href="https://www.flaticon.com/free-icons/clear-sky" title="clear sky icons">Clear sky icons created by Freepik - Flaticon</a>
+# <a href="https://www.flaticon.com/free-icons/snow-cloud" title="snow cloud icons">Snow cloud icons created by twentyfour - Flaticon</a>
+# <a href="https://www.flaticon.com/free-icons/fog" title="fog icons">Fog icons created by surang - Flaticon</a>
+# <a href="https://www.flaticon.com/free-icons/volcano" title="volcano icons">Volcano icons created by dDara - Flaticon</a>
+# <a href="https://icon-icons.com/icon/weather-wind-air-cloud-sky/189116">Weather wind air cloud icon</a>
+# <a href="https://www.flaticon.com/free-icons/tornado" title="tornado icons">Tornado icons created by Good Ware - Flaticon</a>
+# <a href="https://www.freepik.com/icon/sun_1400310">Icon by Freepik</a>
