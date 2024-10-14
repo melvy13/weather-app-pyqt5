@@ -5,7 +5,7 @@ import datetime
 from dotenv import load_dotenv
 from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QRadioButton, QButtonGroup
 from PyQt5.QtGui import QIcon
-
+from PyQt5.QtCore import Qt
 
 class WeatherApp(QMainWindow):
     def __init__(self):
@@ -21,10 +21,12 @@ class WeatherApp(QMainWindow):
         central_widget.setLayout(vbox)
         hbox1 = QHBoxLayout()
         hbox2 = QHBoxLayout()
+        button_hbox = QHBoxLayout()
 
         # Variables
         self.instruction = QLabel("Enter city name: ")
         self.city_input = QLineEdit()
+        self.city_input.setPlaceholderText("e.g. Kuala Lumpur")
         self.get_weather_btn = QPushButton("Get Weather")
         self.temperature_label = QLabel("Temperature")
         self.humidity_label = QLabel("Humidity")
@@ -44,7 +46,8 @@ class WeatherApp(QMainWindow):
         # Adding to layout
         vbox.addWidget(self.instruction)
         vbox.addWidget(self.city_input)
-        vbox.addWidget(self.get_weather_btn)
+        button_hbox.addWidget(self.get_weather_btn)
+        vbox.addLayout(button_hbox)
         vbox.addWidget(self.unit_label)
         hbox1.addWidget(self.unit_choice1)
         hbox1.addWidget(self.unit_choice2)
@@ -59,6 +62,35 @@ class WeatherApp(QMainWindow):
 
         # Connect buttons
         self.get_weather_btn.clicked.connect(self.get_weather)
+
+        # Styling
+        self.setStyleSheet("font-family: Verdana;"
+                           "background-color: hsl(180, 90%, 95%)")
+        self.instruction.setStyleSheet("font-size: 35px;"
+                                       "font-weight: bold;")
+        self.city_input.setStyleSheet("border: 2px solid black;"
+                                      "font-size: 20px;"
+                                      "padding: 5px;")
+        self.get_weather_btn.setStyleSheet("""
+                                        QPushButton {
+                                           background-color: hsl(193, 100%, 50%);
+                                           border: 2px solid hsl(207, 100%, 50%);
+                                           border-radius: 15px;
+                                           font-size: 16px;
+                                        }
+                                           
+                                        QPushButton:hover {
+                                           background-color: hsl(193, 100%, 60%);
+                                           border: 2px solid hsl(207, 100, 30%);
+                                           font-weight: bold;
+                                        }   
+                                        """)
+        self.get_weather_btn.setFixedSize(200, 50)
+
+        self.instruction.setAlignment(Qt.AlignCenter)
+        self.city_input.setAlignment(Qt.AlignCenter)
+        button_hbox.setAlignment(Qt.AlignCenter)
+        
 
     # Move application to center of screen
     def centerWindow(self):
