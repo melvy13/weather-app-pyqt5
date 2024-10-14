@@ -93,8 +93,10 @@ class WeatherApp(QMainWindow):
     def display_weather(self, data):
         temperature = data["main"]["temp"]
         humidity = data["main"]["humidity"]
+        condition = data["weather"][0]["description"]
         self.temperature_label.setText(str(temperature))
         self.humidity_label.setText(str(humidity))
+        self.condition_label.setText(str(condition).capitalize())
 
     def display_error(self, message):
         self.condition_label.setText(message)
