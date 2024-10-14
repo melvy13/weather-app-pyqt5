@@ -19,8 +19,8 @@ class WeatherApp(QMainWindow):
         self.setCentralWidget(central_widget)
         vbox = QVBoxLayout()
         central_widget.setLayout(vbox)
-        hbox1 = QHBoxLayout()
-        hbox2 = QHBoxLayout()
+        unit_hbox = QHBoxLayout()
+        info_hbox = QHBoxLayout()
         button_hbox = QHBoxLayout()
 
         # Variables
@@ -28,9 +28,9 @@ class WeatherApp(QMainWindow):
         self.city_input = QLineEdit()
         self.city_input.setPlaceholderText("e.g. Kuala Lumpur")
         self.get_weather_btn = QPushButton("Get Weather")
-        self.temperature_label = QLabel("Temperature")
-        self.humidity_label = QLabel("Humidity")
-        self.condition_label = QLabel("Weather condition")
+        self.temperature_label = QLabel("Temperature:\n-")
+        self.humidity_label = QLabel("Humidity:\n-")
+        self.condition_label = QLabel("Weather condition:\n-")
         self.unit_label = QLabel("Temperature Unit: ")
         self.unit_choice1 = QRadioButton("Kelvin (K)")
         self.unit_choice2 = QRadioButton("Celsius (°C)")
@@ -49,13 +49,13 @@ class WeatherApp(QMainWindow):
         button_hbox.addWidget(self.get_weather_btn)
         vbox.addLayout(button_hbox)
         vbox.addWidget(self.unit_label)
-        hbox1.addWidget(self.unit_choice1)
-        hbox1.addWidget(self.unit_choice2)
-        hbox1.addWidget(self.unit_choice3)
-        vbox.addLayout(hbox1)
-        hbox2.addWidget(self.temperature_label)
-        hbox2.addWidget(self.humidity_label)
-        vbox.addLayout(hbox2)
+        unit_hbox.addWidget(self.unit_choice1)
+        unit_hbox.addWidget(self.unit_choice2)
+        unit_hbox.addWidget(self.unit_choice3)
+        vbox.addLayout(unit_hbox)
+        info_hbox.addWidget(self.temperature_label)
+        info_hbox.addWidget(self.humidity_label)
+        vbox.addLayout(info_hbox)
         vbox.addWidget(self.emoji_label)
         vbox.addWidget(self.condition_label)
         vbox.addWidget(self.time_label)
@@ -64,33 +64,72 @@ class WeatherApp(QMainWindow):
         self.get_weather_btn.clicked.connect(self.get_weather)
 
         # Styling
-        self.setStyleSheet("font-family: Verdana;"
-                           "background-color: hsl(180, 90%, 95%)")
-        self.instruction.setStyleSheet("font-size: 35px;"
-                                       "font-weight: bold;")
-        self.city_input.setStyleSheet("border: 2px solid black;"
-                                      "font-size: 20px;"
-                                      "padding: 5px;")
-        self.get_weather_btn.setStyleSheet("""
-                                        QPushButton {
-                                           background-color: hsl(193, 100%, 50%);
-                                           border: 2px solid hsl(207, 100%, 50%);
-                                           border-radius: 15px;
-                                           font-size: 16px;
-                                        }
-                                           
-                                        QPushButton:hover {
-                                           background-color: hsl(193, 100%, 60%);
-                                           border: 2px solid hsl(207, 100, 30%);
-                                           font-weight: bold;
-                                        }   
-                                        """)
+        self.instruction.setObjectName("instruction")
+        self.city_input.setObjectName("city_input")
+        self.get_weather_btn.setObjectName("get_weather_btn")
+        self.temperature_label.setObjectName("temperature_label")
+        self.humidity_label.setObjectName("humidity_label")
+        self.condition_label.setObjectName("condition_label")
+        self.unit_label.setObjectName("unit_label")
+        self.unit_choice1.setObjectName("unit_choice1")
+        self.unit_choice2.setObjectName("unit_choice2")
+        self.unit_choice3.setObjectName("unit_choice3")
+        self.unit_choice_group.setObjectName("unit_choice_group")
+        self.time_label.setObjectName("time_label")
+        self.emoji_label.setObjectName("emoji_label")
+
+        self.setStyleSheet("""
+                        * {
+                           font-family: Verdana;
+                           background-color: hsl(180, 90%, 95%);
+                           font-size: 18px;
+                        }
+                           
+                        QLabel#instruction {
+                           font-size: 35px;
+                           font-weight: bold;   
+                        }
+                           
+                        QLineEdit#city_input {
+                           border: 2px solid black;
+                           font-size: 20px;
+                           padding: 5px;   
+                        }
+                           
+                        QPushButton {
+                           background-color: hsl(193, 100%, 50%);
+                           border: 2px solid hsl(207, 100%, 50%);
+                           border-radius: 15px;
+                        }
+                           
+                        QPushButton:hover {
+                           background-color: hsl(193, 100%, 60%);
+                           border: 2px solid hsl(207, 100, 30%);
+                           font-weight: bold;
+                        }
+                           
+                        QRadioButton::indicator {
+                           width: 18px;
+                           height: 18px;
+                        }
+                           
+                        QLabel#temperature_label, QLabel#humidity_label, QLabel#condition_label {
+                           font-size: 35px;
+                        }
+                        """)
+        
         self.get_weather_btn.setFixedSize(200, 50)
+        self.unit_label.setFixedHeight(50)
+        unit_hbox.setSpacing(20)
+        info_hbox.setSpacing(100)
 
         self.instruction.setAlignment(Qt.AlignCenter)
         self.city_input.setAlignment(Qt.AlignCenter)
         button_hbox.setAlignment(Qt.AlignCenter)
-        
+        self.unit_label.setAlignment(Qt.AlignCenter)
+        unit_hbox.setAlignment(Qt.AlignCenter)
+        info_hbox.setAlignment(Qt.AlignCenter)
+        self.condition_label.setAlignment(Qt.AlignCenter)
 
     # Move application to center of screen
     def centerWindow(self):
@@ -171,8 +210,8 @@ class WeatherApp(QMainWindow):
 
     def display_error(self, message):
         self.condition_label.setText(message)
-        self.temperature_label.clear()
-        self.humidity_label.clear()
+        self.temperature_label.setText("Temperature:\n-")
+        self.humidity_label.setText("Humidity:\n-")
 
     def get_emoji(self, id):
         if 200 <= id <= 232: # Thunderstorm
