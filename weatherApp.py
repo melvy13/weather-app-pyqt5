@@ -39,6 +39,7 @@ class WeatherApp(QMainWindow):
         self.unit_choice_group.addButton(self.unit_choice3)
         self.unit_choice1.setChecked(True) # Kelvin checked by default
         self.time_label = QLabel("Time")
+        self.emoji_label = QLabel()
 
         # Adding to layout
         vbox.addWidget(self.instruction)
@@ -52,6 +53,7 @@ class WeatherApp(QMainWindow):
         hbox2.addWidget(self.temperature_label)
         hbox2.addWidget(self.humidity_label)
         vbox.addLayout(hbox2)
+        vbox.addWidget(self.emoji_label)
         vbox.addWidget(self.condition_label)
         vbox.addWidget(self.time_label)
 
@@ -113,6 +115,7 @@ class WeatherApp(QMainWindow):
     def display_weather(self, data):
         k_temperature = data["main"]["temp"]
         humidity = data["main"]["humidity"]
+        weather_id = data["weather"][0]["id"]
         condition = data["weather"][0]["description"]
         unix_time = data["dt"]
 
@@ -128,8 +131,9 @@ class WeatherApp(QMainWindow):
             self.temperature_label.setText("Pick a temperature unit!")
 
         self.humidity_label.setText(f"Humidity:\n{humidity}%")
+        self.emoji_label.setText(self.get_emoji(weather_id))
         self.condition_label.setText(f"Weather condition:\n{str(condition).capitalize()}")
-        
+
         # Unix time converted to Year-Month-Date Hour:Minute:Seconds UTC
         self.time_label.setText(f"Time Data is Taken:\n{datetime.datetime.fromtimestamp(unix_time, datetime.timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")}")
 
@@ -137,6 +141,28 @@ class WeatherApp(QMainWindow):
         self.condition_label.setText(message)
         self.temperature_label.clear()
         self.humidity_label.clear()
+
+    def get_emoji(self, id):
+        if 200 <= id <= 232: # Thunderstorm
+            return "⛈️"
+        elif 300 <= id <= 531: # Drizzles / Rain
+            return "🌧️"
+        elif 600 <= id <= 622: # Snow
+            return "🌨️"
+        elif 701 <= id <= 761: # Haze / Smoke / Fog / etc.
+            return "🌫️"
+        elif id == 762: # Volcanic ash
+            return "🌋"
+        elif id == 771: # Squalls
+            return "💨"
+        elif id == 781: # Tornado
+            return "🌪️"
+        elif id == 800: # Clear
+            return "☀️"
+        elif 801 <= id <= 804: # Cloudy
+            return "☁️"
+        else:
+            return ""
 
 if __name__ == "__main__":
     load_dotenv()
