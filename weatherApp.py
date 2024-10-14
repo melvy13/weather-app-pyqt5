@@ -35,6 +35,7 @@ class WeatherApp(QMainWindow):
         self.unit_choice_group.addButton(self.unit_choice1)
         self.unit_choice_group.addButton(self.unit_choice2)
         self.unit_choice_group.addButton(self.unit_choice3)
+        self.unit_choice1.setChecked(True) # Kelvin checked by default
 
         # Adding to layout
         vbox.addWidget(self.instruction)
@@ -52,9 +53,6 @@ class WeatherApp(QMainWindow):
 
         # Connect buttons
         self.get_weather_btn.clicked.connect(self.get_weather)
-        self.unit_choice1.toggled.connect(self.unit_changed)
-        self.unit_choice2.toggled.connect(self.unit_changed)
-        self.unit_choice3.toggled.connect(self.unit_changed)
 
     # Move application to center of screen
     def centerWindow(self):
@@ -109,22 +107,26 @@ class WeatherApp(QMainWindow):
             self.display_error(f"Request Error:\n{req_error}")
 
     def display_weather(self, data):
-        temperature = data["main"]["temp"]
+        k_temperature = data["main"]["temp"]
         humidity = data["main"]["humidity"]
         condition = data["weather"][0]["description"]
 
+        if self.unit_choice1.isChecked():
+            self.temperature_label.setText(f"{k_temperature:.2f} K")
+        elif self.unit_choice2.isChecked():
+            c_temperature = k_temperature - 273.15
+            self.temperature_label.setText(f"{c_temperature:.2f}°C")
+        elif self.unit_choice3.isChecked():
+            f_temperature = (k_temperature * 1.8) - 459.67
+            self.temperature_label.setText(f"{f_temperature:.2f}°F")
+        else:
+            self.temperature_label.setText("Pick a temperature unit!")
 
-        self.temperature_label.setText(str(temperature))
         self.humidity_label.setText(str(humidity))
         self.condition_label.setText(str(condition).capitalize())
 
     def display_error(self, message):
         self.condition_label.setText(message)
-
-    def unit_changed(self):
-        radio_button = self.sender()
-        if radio_button.isChecked():
-            print(f"{radio_button.text()} is selected.")
 
 if __name__ == "__main__":
     load_dotenv()
