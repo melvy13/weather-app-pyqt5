@@ -29,12 +29,14 @@ class WeatherApp(QMainWindow):
 
         # Adding to layout
         vbox.addWidget(self.instruction)
-        vbox.addWidget(self.city)
+        vbox.addWidget(self.city_input)
         vbox.addWidget(self.get_weather_btn)
         hbox.addWidget(self.temperature_label)
         hbox.addWidget(self.humidity_label)
         vbox.addLayout(hbox)
         vbox.addWidget(self.condition_label)
+
+        self.get_weather_btn.clicked.connect(self.get_weather)
 
     # Move application to center of screen
     def centerWindow(self):
@@ -49,11 +51,18 @@ class WeatherApp(QMainWindow):
 
         try:
             response = requests.get(url)
-            data = response.json
+            response.raise_for_status()
+            data = response.json()
             print(data)
+
+            if data["cod"] == 200: # Successful request code
+                self.display_weather(data)
 
         except:
             print("Something happened")
+
+    def display_weather(self, data):
+        pass
 
 
 if __name__ == "__main__":
