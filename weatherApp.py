@@ -57,14 +57,47 @@ class WeatherApp(QMainWindow):
             if data["cod"] == 200: # Successful request code
                 self.display_weather(data)
 
-        except Exception as e:
-            print(e)
+        except requests.exceptions.HTTPError as http_error:
+            match response.status_code:
+                case 400:
+                    self.display_error("400 Bad Request:\nPlease check your input")
+                case 401:
+                    self.display_error("401 Unauthorized:\nInvalid API key")
+                case 403:
+                    self.display_error("403 Forbidden:\nAccess is denied")
+                case 404:
+                    self.display_error("404 Not Found:\nCity not found")
+                case 500:
+                    self.display_error("500 Internal Server Error:\nPlease try again later")
+                case 502:
+                    self.display_error("502 Bad Gateway:\nInvalid response from server")
+                case 503:
+                    self.display_error("503 Service Unavailable:\nServer is down")
+                case 504:
+                    self.display_error("504 Gateway Timeout:\nNo response from the server")
+                case _:
+                    self.display_error(f"HTTP error occured:\n{http_error}")
+
+        except requests.exceptions.ConnectionError:
+            self.display_error("Connection Error:\nCheck your internet connection")
+
+        except requests.exceptions.Timeout:
+            self.display_error("Timeout Error:\nRequest timed out")
+
+        except requests.exceptions.TooManyRedirects:
+            self.display_error("Too Many Redirects:\nCheck the URL")
+        
+        except requests.exceptions.RequestException as req_error:
+            self.display_error(f"Request Error:\n{req_error}")
 
     def display_weather(self, data):
         temperature = data["main"]["temp"]
         humidity = data["main"]["humidity"]
         self.temperature_label.setText(str(temperature))
         self.humidity_label.setText(str(humidity))
+
+    def display_error(self, message):
+        self.condition_label.setText(message)
 
 if __name__ == "__main__":
     load_dotenv()
