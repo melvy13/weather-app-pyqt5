@@ -2,6 +2,7 @@ import os
 import sys
 import requests
 import datetime
+import emoji
 from dotenv import load_dotenv
 from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QRadioButton, QButtonGroup
 from PyQt5.QtGui import QIcon
@@ -42,6 +43,7 @@ class WeatherApp(QMainWindow):
         self.unit_choice1.setChecked(True) # Kelvin checked by default
         self.time_label = QLabel("Time")
         self.emoji_label = QLabel()
+        self.error_label = QLabel()
 
         # Adding to layout
         vbox.addWidget(self.instruction)
@@ -56,9 +58,10 @@ class WeatherApp(QMainWindow):
         info_hbox.addWidget(self.temperature_label)
         info_hbox.addWidget(self.humidity_label)
         vbox.addLayout(info_hbox)
-        vbox.addWidget(self.emoji_label)
         vbox.addWidget(self.condition_label)
+        vbox.addWidget(self.emoji_label)
         vbox.addWidget(self.time_label)
+        vbox.addWidget(self.error_label)
 
         # Connect buttons
         self.get_weather_btn.clicked.connect(self.get_weather)
@@ -107,7 +110,7 @@ class WeatherApp(QMainWindow):
                            border: 2px solid hsl(207, 100, 30%);
                            font-weight: bold;
                         }
-                           
+                                                         
                         QRadioButton::indicator {
                            width: 18px;
                            height: 18px;
@@ -116,20 +119,28 @@ class WeatherApp(QMainWindow):
                         QLabel#temperature_label, QLabel#humidity_label, QLabel#condition_label {
                            font-size: 35px;
                         }
+                           
+                        QLabel#emoji_label {
+                           font-family: Segoe UI Emoji;
+                           font-size: 60px;
+                           padding: 15px;
+                        }
                         """)
         
         self.get_weather_btn.setFixedSize(200, 50)
-        self.unit_label.setFixedHeight(50)
+        self.unit_label.setFixedHeight(40)
         unit_hbox.setSpacing(20)
         info_hbox.setSpacing(100)
+        self.emoji_label.setMinimumSize(300, 80)
 
         self.instruction.setAlignment(Qt.AlignCenter)
         self.city_input.setAlignment(Qt.AlignCenter)
         button_hbox.setAlignment(Qt.AlignCenter)
-        self.unit_label.setAlignment(Qt.AlignCenter)
-        unit_hbox.setAlignment(Qt.AlignCenter)
+        self.unit_label.setAlignment(Qt.AlignCenter | Qt.AlignBottom)
+        unit_hbox.setAlignment(Qt.AlignCenter | Qt.AlignTop)
         info_hbox.setAlignment(Qt.AlignCenter)
         self.condition_label.setAlignment(Qt.AlignCenter)
+        self.emoji_label.setAlignment(Qt.AlignCenter)
 
     # Move application to center of screen
     def centerWindow(self):
@@ -184,6 +195,7 @@ class WeatherApp(QMainWindow):
             self.display_error(f"Request Error:\n{req_error}")
 
     def display_weather(self, data):
+        self.error_label.clear()
         k_temperature = data["main"]["temp"]
         humidity = data["main"]["humidity"]
         weather_id = data["weather"][0]["id"]
@@ -209,29 +221,31 @@ class WeatherApp(QMainWindow):
         self.time_label.setText(f"Time Data is Taken:\n{datetime.datetime.fromtimestamp(unix_time, datetime.timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")}")
 
     def display_error(self, message):
-        self.condition_label.setText(message)
+        self.error_label.setText(message)
         self.temperature_label.setText("Temperature:\n-")
         self.humidity_label.setText("Humidity:\n-")
+        self.condition_label.setText("Weather condition:\n-")
+        self.emoji_label.clear()
 
     def get_emoji(self, id):
         if 200 <= id <= 232: # Thunderstorm
-            return "⛈️"
+            return emoji.emojize(":cloud_with_lightning_and_rain:")
         elif 300 <= id <= 531: # Drizzles / Rain
-            return "🌧️"
+            return emoji.emojize(":cloud_with_rain:")
         elif 600 <= id <= 622: # Snow
-            return "🌨️"
+            return emoji.emojize(":cloud_with_snow:")
         elif 701 <= id <= 761: # Haze / Smoke / Fog / etc.
-            return "🌫️"
+            return emoji.emojize(":fog:")
         elif id == 762: # Volcanic ash
-            return "🌋"
+            return emoji.emojize(":volcano:")
         elif id == 771: # Squalls
-            return "💨"
+            return emoji.emojize(":dashing_away:")
         elif id == 781: # Tornado
-            return "🌪️"
+            return emoji.emojize(":tornado:")
         elif id == 800: # Clear
-            return "☀️"
+            return emoji.emojize(":sun:")
         elif 801 <= id <= 804: # Cloudy
-            return "☁️"
+            return emoji.emojize(":cloud:")
         else:
             return ""
 
