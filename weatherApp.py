@@ -26,7 +26,7 @@ class WeatherApp(QMainWindow):
         self.get_weather_btn = QPushButton("Get Weather")
         self.temperature_label = QLabel("Temperature")
         self.humidity_label = QLabel("Humidity")
-        self.condition_label = QLabel("Condition")
+        self.condition_label = QLabel("Weather condition")
         self.unit_label = QLabel("Temperature Unit: ")
         self.unit_choice1 = QRadioButton("Kelvin (K)")
         self.unit_choice2 = QRadioButton("Celsius (°C)")
@@ -112,18 +112,18 @@ class WeatherApp(QMainWindow):
         condition = data["weather"][0]["description"]
 
         if self.unit_choice1.isChecked():
-            self.temperature_label.setText(f"{k_temperature:.2f} K")
+            self.temperature_label.setText(f"Temperature:\n{k_temperature:.2f} K")
         elif self.unit_choice2.isChecked():
             c_temperature = k_temperature - 273.15
-            self.temperature_label.setText(f"{c_temperature:.2f}°C")
+            self.temperature_label.setText(f"Temperature:\n{c_temperature:.2f}°C")
         elif self.unit_choice3.isChecked():
             f_temperature = (k_temperature * 1.8) - 459.67
-            self.temperature_label.setText(f"{f_temperature:.2f}°F")
+            self.temperature_label.setText(f"Temperature:\n{f_temperature:.2f}°F")
         else:
             self.temperature_label.setText("Pick a temperature unit!")
 
-        self.humidity_label.setText(str(humidity))
-        self.condition_label.setText(str(condition).capitalize())
+        self.humidity_label.setText(f"Humidity:\n{humidity}%")
+        self.condition_label.setText(f"Weather condition:\n{str(condition).capitalize()}")
 
     def display_error(self, message):
         self.condition_label.setText(message)
