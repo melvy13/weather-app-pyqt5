@@ -53,17 +53,18 @@ class WeatherApp(QMainWindow):
             response = requests.get(url)
             response.raise_for_status()
             data = response.json()
-            print(data)
 
             if data["cod"] == 200: # Successful request code
                 self.display_weather(data)
 
-        except:
-            print("Something happened")
+        except Exception as e:
+            print(e)
 
     def display_weather(self, data):
-        pass
-
+        temperature = data["main"]["temp"]
+        humidity = data["main"]["humidity"]
+        self.temperature_label.setText(str(temperature))
+        self.humidity_label.setText(str(humidity))
 
 if __name__ == "__main__":
     load_dotenv()
