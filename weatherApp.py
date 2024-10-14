@@ -1,9 +1,11 @@
 import os
 import sys
 import requests
+import datetime
 from dotenv import load_dotenv
 from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QRadioButton, QButtonGroup
 from PyQt5.QtGui import QIcon
+
 
 class WeatherApp(QMainWindow):
     def __init__(self):
@@ -36,6 +38,7 @@ class WeatherApp(QMainWindow):
         self.unit_choice_group.addButton(self.unit_choice2)
         self.unit_choice_group.addButton(self.unit_choice3)
         self.unit_choice1.setChecked(True) # Kelvin checked by default
+        self.time_label = QLabel("Time")
 
         # Adding to layout
         vbox.addWidget(self.instruction)
@@ -50,6 +53,7 @@ class WeatherApp(QMainWindow):
         hbox2.addWidget(self.humidity_label)
         vbox.addLayout(hbox2)
         vbox.addWidget(self.condition_label)
+        vbox.addWidget(self.time_label)
 
         # Connect buttons
         self.get_weather_btn.clicked.connect(self.get_weather)
@@ -110,6 +114,7 @@ class WeatherApp(QMainWindow):
         k_temperature = data["main"]["temp"]
         humidity = data["main"]["humidity"]
         condition = data["weather"][0]["description"]
+        unix_time = data["dt"]
 
         if self.unit_choice1.isChecked():
             self.temperature_label.setText(f"Temperature:\n{k_temperature:.2f} K")
@@ -124,9 +129,14 @@ class WeatherApp(QMainWindow):
 
         self.humidity_label.setText(f"Humidity:\n{humidity}%")
         self.condition_label.setText(f"Weather condition:\n{str(condition).capitalize()}")
+        
+        # Unix time converted to Year-Month-Date Hour:Minute:Seconds UTC
+        self.time_label.setText(f"Time Data is Taken:\n{datetime.datetime.fromtimestamp(unix_time, datetime.timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")}")
 
     def display_error(self, message):
         self.condition_label.setText(message)
+        self.temperature_label.clear()
+        self.humidity_label.clear()
 
 if __name__ == "__main__":
     load_dotenv()
