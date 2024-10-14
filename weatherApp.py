@@ -2,7 +2,7 @@ import os
 import sys
 import requests
 from dotenv import load_dotenv
-from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout
+from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QRadioButton, QButtonGroup
 from PyQt5.QtGui import QIcon
 
 class WeatherApp(QMainWindow):
@@ -17,7 +17,8 @@ class WeatherApp(QMainWindow):
         self.setCentralWidget(central_widget)
         vbox = QVBoxLayout()
         central_widget.setLayout(vbox)
-        hbox = QHBoxLayout()
+        hbox1 = QHBoxLayout()
+        hbox2 = QHBoxLayout()
 
         # Variables
         self.instruction = QLabel("Enter city name: ")
@@ -26,17 +27,34 @@ class WeatherApp(QMainWindow):
         self.temperature_label = QLabel("Temperature")
         self.humidity_label = QLabel("Humidity")
         self.condition_label = QLabel("Condition")
+        self.unit_label = QLabel("Temperature Unit: ")
+        self.unit_choice1 = QRadioButton("Kelvin (K)")
+        self.unit_choice2 = QRadioButton("Celsius (°C)")
+        self.unit_choice3 = QRadioButton("Fahrenheit (°F)")
+        self.unit_choice_group = QButtonGroup()
+        self.unit_choice_group.addButton(self.unit_choice1)
+        self.unit_choice_group.addButton(self.unit_choice2)
+        self.unit_choice_group.addButton(self.unit_choice3)
 
         # Adding to layout
         vbox.addWidget(self.instruction)
         vbox.addWidget(self.city_input)
         vbox.addWidget(self.get_weather_btn)
-        hbox.addWidget(self.temperature_label)
-        hbox.addWidget(self.humidity_label)
-        vbox.addLayout(hbox)
+        vbox.addWidget(self.unit_label)
+        hbox1.addWidget(self.unit_choice1)
+        hbox1.addWidget(self.unit_choice2)
+        hbox1.addWidget(self.unit_choice3)
+        vbox.addLayout(hbox1)
+        hbox2.addWidget(self.temperature_label)
+        hbox2.addWidget(self.humidity_label)
+        vbox.addLayout(hbox2)
         vbox.addWidget(self.condition_label)
 
+        # Connect buttons
         self.get_weather_btn.clicked.connect(self.get_weather)
+        self.unit_choice1.toggled.connect(self.unit_changed)
+        self.unit_choice2.toggled.connect(self.unit_changed)
+        self.unit_choice3.toggled.connect(self.unit_changed)
 
     # Move application to center of screen
     def centerWindow(self):
@@ -94,12 +112,19 @@ class WeatherApp(QMainWindow):
         temperature = data["main"]["temp"]
         humidity = data["main"]["humidity"]
         condition = data["weather"][0]["description"]
+
+
         self.temperature_label.setText(str(temperature))
         self.humidity_label.setText(str(humidity))
         self.condition_label.setText(str(condition).capitalize())
 
     def display_error(self, message):
         self.condition_label.setText(message)
+
+    def unit_changed(self):
+        radio_button = self.sender()
+        if radio_button.isChecked():
+            print(f"{radio_button.text()} is selected.")
 
 if __name__ == "__main__":
     load_dotenv()
