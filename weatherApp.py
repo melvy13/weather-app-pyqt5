@@ -41,7 +41,7 @@ class WeatherApp(QMainWindow):
         self.unit_choice_group.addButton(self.unit_choice2)
         self.unit_choice_group.addButton(self.unit_choice3)
         self.unit_choice1.setChecked(True) # Kelvin checked by default
-        self.time_label = QLabel("Time")
+        self.time_label = QLabel()
         self.emoji_label = QLabel()
         self.error_label = QLabel()
 
@@ -118,12 +118,12 @@ class WeatherApp(QMainWindow):
                            
                         QLabel#temperature_label, QLabel#humidity_label, QLabel#condition_label {
                            font-size: 35px;
+                           margin: 10px;
                         }
                            
                         QLabel#emoji_label {
                            font-family: Segoe UI Emoji;
                            font-size: 60px;
-                           padding: 15px;
                         }
                         """)
         
@@ -131,7 +131,6 @@ class WeatherApp(QMainWindow):
         self.unit_label.setFixedHeight(40)
         unit_hbox.setSpacing(20)
         info_hbox.setSpacing(100)
-        self.emoji_label.setMinimumSize(300, 80)
 
         self.instruction.setAlignment(Qt.AlignCenter)
         self.city_input.setAlignment(Qt.AlignCenter)
@@ -141,6 +140,8 @@ class WeatherApp(QMainWindow):
         info_hbox.setAlignment(Qt.AlignCenter)
         self.condition_label.setAlignment(Qt.AlignCenter)
         self.emoji_label.setAlignment(Qt.AlignCenter)
+        self.time_label.setAlignment(Qt.AlignCenter)
+        self.error_label.setAlignment(Qt.AlignCenter)
 
     # Move application to center of screen
     def centerWindow(self):
@@ -226,6 +227,7 @@ class WeatherApp(QMainWindow):
         self.humidity_label.setText("Humidity:\n-")
         self.condition_label.setText("Weather condition:\n-")
         self.emoji_label.clear()
+        self.time_label.clear()
 
     def get_emoji(self, id):
         if 200 <= id <= 232: # Thunderstorm
