@@ -2,7 +2,6 @@ import os
 import sys
 import requests
 import datetime
-import emoji
 from dotenv import load_dotenv
 from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QRadioButton, QButtonGroup
 from PyQt5.QtGui import QIcon, QPixmap
@@ -42,7 +41,7 @@ class WeatherApp(QMainWindow):
         self.unit_choice_group.addButton(self.unit_choice3)
         self.unit_choice1.setChecked(True) # Kelvin checked by default
         self.time_label = QLabel()
-        self.emoji_label = QLabel()
+        self.icon_label = QLabel()
         self.error_label = QLabel()
 
         # Adding to layout
@@ -59,7 +58,7 @@ class WeatherApp(QMainWindow):
         info_hbox.addWidget(self.humidity_label)
         vbox.addLayout(info_hbox)
         vbox.addWidget(self.condition_label)
-        vbox.addWidget(self.emoji_label)
+        vbox.addWidget(self.icon_label)
         vbox.addWidget(self.time_label)
         vbox.addWidget(self.error_label)
 
@@ -69,17 +68,9 @@ class WeatherApp(QMainWindow):
         # Styling
         self.instruction.setObjectName("instruction")
         self.city_input.setObjectName("city_input")
-        self.get_weather_btn.setObjectName("get_weather_btn")
         self.temperature_label.setObjectName("temperature_label")
         self.humidity_label.setObjectName("humidity_label")
         self.condition_label.setObjectName("condition_label")
-        self.unit_label.setObjectName("unit_label")
-        self.unit_choice1.setObjectName("unit_choice1")
-        self.unit_choice2.setObjectName("unit_choice2")
-        self.unit_choice3.setObjectName("unit_choice3")
-        self.unit_choice_group.setObjectName("unit_choice_group")
-        self.time_label.setObjectName("time_label")
-        self.emoji_label.setObjectName("emoji_label")
 
         self.setStyleSheet("""
                         * {
@@ -120,11 +111,6 @@ class WeatherApp(QMainWindow):
                            font-size: 35px;
                            margin: 10px;
                         }
-                           
-                        QLabel#emoji_label {
-                           font-family: Segoe UI Emoji;
-                           font-size: 60px;
-                        }
                         """)
         
         self.get_weather_btn.setFixedSize(200, 50)
@@ -139,7 +125,7 @@ class WeatherApp(QMainWindow):
         unit_hbox.setAlignment(Qt.AlignCenter | Qt.AlignTop)
         info_hbox.setAlignment(Qt.AlignCenter)
         self.condition_label.setAlignment(Qt.AlignCenter)
-        self.emoji_label.setAlignment(Qt.AlignCenter)
+        self.icon_label.setAlignment(Qt.AlignCenter)
         self.time_label.setAlignment(Qt.AlignCenter)
         self.error_label.setAlignment(Qt.AlignCenter)
 
@@ -215,7 +201,7 @@ class WeatherApp(QMainWindow):
             self.temperature_label.setText("Pick a temperature unit!")
 
         self.humidity_label.setText(f"Humidity:\n{humidity}%")
-        self.emoji_label.setPixmap(self.get_icon(weather_id))
+        self.icon_label.setPixmap(self.get_icon(weather_id))
         self.condition_label.setText(f"Weather condition:\n{str(condition).capitalize()}")
 
         # Unix time converted to Year-Month-Date Hour:Minute:Seconds UTC
@@ -226,7 +212,7 @@ class WeatherApp(QMainWindow):
         self.temperature_label.setText("Temperature:\n-")
         self.humidity_label.setText("Humidity:\n-")
         self.condition_label.setText("Weather condition:\n-")
-        self.emoji_label.clear()
+        self.icon_label.clear()
         self.time_label.clear()
 
     def get_icon(self, id):
