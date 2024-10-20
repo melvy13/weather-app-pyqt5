@@ -11,7 +11,7 @@ class WeatherApp(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Weather App")
-        self.setWindowIcon(QIcon("weatherIcon.png"))
+        self.setWindowIcon(QIcon("resources/weatherIcon.png"))
         self.setFixedSize(600, 700)
         self.centerWindow()
 
@@ -216,15 +216,15 @@ class WeatherApp(QMainWindow):
         self.time_label.clear()
 
     def get_icon(self, id):
-        thunderstorm_pixmap = QPixmap("storm.png")
-        rain_pixmap = QPixmap("rain.png")
-        snow_pixmap = QPixmap("snow.png")
-        fog_pixmap = QPixmap("foggy.png")
-        volcano_pixmap = QPixmap("volcano.png")
-        squalls_pixmap = QPixmap("wind.png")
-        tornado_pixmap = QPixmap("tornado.png")
-        clear_pixmap = QPixmap("sun.png")
-        cloud_pixmap = QPixmap("cloudy.png")
+        thunderstorm_pixmap = QPixmap("resources/storm.png")
+        rain_pixmap = QPixmap("resources/rain.png")
+        snow_pixmap = QPixmap("resources/snow.png")
+        fog_pixmap = QPixmap("resources/foggy.png")
+        volcano_pixmap = QPixmap("resources/volcano.png")
+        squalls_pixmap = QPixmap("resources/wind.png")
+        tornado_pixmap = QPixmap("resources/tornado.png")
+        clear_pixmap = QPixmap("resources/sun.png")
+        cloud_pixmap = QPixmap("resources/cloudy.png")
 
         thunderstorm_pixmap = thunderstorm_pixmap.scaled(100, 100)
         rain_pixmap = rain_pixmap.scaled(100, 100)
