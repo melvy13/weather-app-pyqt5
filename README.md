@@ -25,4 +25,4 @@ If you typed the city name wrongly, an error will be shown. Don't use short form
 
 There are many more weather info about the city that can be added, such as wind speed, wind direction, precipitation, cloudiness, visibility, etc...
 
-I just felt that the 4 info given were the most important for now. I should probably think of a way to fit all the extra info in the GUI in the future (hopefully).
+For now though, the 4 info given should be the most important. I will (probably) think of a way to fit all the extra info in the GUI in the future.
